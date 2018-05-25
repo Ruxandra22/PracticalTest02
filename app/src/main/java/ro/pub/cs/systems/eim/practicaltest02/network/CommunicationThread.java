@@ -84,15 +84,23 @@ public class CommunicationThread extends Thread {
                 JSONObject reader = new JSONObject(pageSourceCode);
                 JSONObject sys  = reader.getJSONObject("time");
                 String time = sys.getString("updated");
-                String bpi = sys.getString("bpi");
+                JSONObject sysBpi  = reader.getJSONObject("bpi");
                 result.add(time);
 
-//                if(coin.equals("EUR")) {
-//                    String eur = sys.getString("updated");
-//                }
-//                else if(coin.equals("USD")) {
-//
-//                }
+                String eur = "", usd = "";
+
+                if(coin.equals("EUR")) {
+                    JSONObject eurObject = sysBpi.getJSONObject("EUR");
+                    eur = eurObject.getString("rate");
+                    result.add(eur);
+                }
+                else if(coin.equals("USD")) {
+                    JSONObject eurObject = sysBpi.getJSONObject("USD");
+                    usd = eurObject.getString("rate");
+                    result.add(usd);
+                }
+                coinInformation = new CoinInformation(time, usd, eur);
+                serverThread.setData(coin, coinInformation);
 //                Document document = Jsoup.parse(pageSourceCode);
 //                Element element = document.child(0);
 //                Elements elements = element.getElementsByTag(Constants.SCRIPT_TAG);
